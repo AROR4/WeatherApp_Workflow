@@ -1,0 +1,55 @@
+<div class="weather-container">
+  <div class="weather-header">
+    <div>
+      <h1>Weather Dashboard</h1>
+      <p class="subtitle">Live 5-day weather forecasts from REST API</p>
+    </div>
+    <button class="btn-refresh" (click)="fetchWeather()" [disabled]="isLoading()">
+      Refresh
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-state" *ngIf="isLoading()">
+    <p>Loading weather data...</p>
+  </div>
+
+  <!-- Error State -->
+  <div class="error-state" *ngIf="errorMessage() && !isLoading()">
+    <p>{{ errorMessage() }}</p>
+    <button class="btn-retry" (click)="fetchWeather()">Retry</button>
+  </div>
+
+  <!-- Data Display -->
+  <div *ngIf="!isLoading() && !errorMessage() && forecasts().length > 0">
+    <div class="stats-bar">
+      Total Forecast Records: <strong>{{ forecasts().length }}</strong>
+    </div>
+
+    <div class="table-responsive">
+      <table class="forecast-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Temperature (&deg;C)</th>
+            <th>Temperature (&deg;F)</th>
+            <th>Summary</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let forecast of forecasts()" [class.hot-row]="forecast.temperatureC > 30">
+            <td>{{ forecast.date }}</td>
+            <td>{{ forecast.temperatureC }}&deg;C</td>
+            <td>{{ forecast.temperatureF }}&deg;F</td>
+            <td>{{ forecast.summary }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="!isLoading() && !errorMessage() && forecasts().length === 0">
+    <p>No weather forecasts available.</p>
+  </div>
+</div>
